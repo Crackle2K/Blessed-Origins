@@ -13,6 +13,10 @@ using namespace vex;
  * velocity vectors for each motor to enable precise diagonal movement.
  */
 
+// ========================================
+// Primary Drive Control Functions
+// ========================================
+
 /**
  * Dual-stick arcade drive with diagonal movement support
  * 
@@ -54,6 +58,12 @@ void tankDrive(double left, double right);
  * @param turn Rotation velocity (-100 to 100)
  */
 void fieldCentricDrive(double forward, double strafe, double turn);
+
+// ========================================
+// Utility Functions
+// ========================================
+// These are public to allow users to create custom drive functions
+// or apply the same processing to other control inputs
 
 /**
  * Apply deadzone to controller input

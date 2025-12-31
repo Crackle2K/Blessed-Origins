@@ -121,8 +121,9 @@ void fieldCentricDrive(double forward, double strafe, double turn) {
   double rightBackVelocity = forward + strafe - turn;
   
   // Find the maximum absolute velocity to scale if needed
-  double maxVelocity = fmax(fmax(fabs(leftFrontVelocity), fabs(leftBackVelocity)),
-                            fmax(fabs(rightFrontVelocity), fabs(rightBackVelocity)));
+  double maxLeft = fmax(fabs(leftFrontVelocity), fabs(leftBackVelocity));
+  double maxRight = fmax(fabs(rightFrontVelocity), fabs(rightBackVelocity));
+  double maxVelocity = fmax(maxLeft, maxRight);
   
   // Scale down if any velocity exceeds 100%
   if (maxVelocity > 100.0) {

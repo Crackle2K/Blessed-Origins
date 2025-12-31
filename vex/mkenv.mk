@@ -47,6 +47,11 @@ ifneq ("$(origin SUPPRESS_WARNINGS)", "undefined")
 WFLAG = -w
 endif
 
+# SDK version - set default if not provided by build environment
+ifeq ("$(origin SDK_VERSION)", "undefined")
+SDK_VERSION = latest
+endif
+
 # Get the SDK path for the current platform
 VEX_SDK_HOME = $(HOME)/vex-sdks
 VEX_SDK = $(VEX_SDK_HOME)/$(PLATFORM)/$(SDK_VERSION)
