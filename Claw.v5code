@@ -1,0 +1,22 @@
+{
+  "creationDate": "2025-12-31T21:57:00.000Z",
+  "platform": "V5",
+  "rebuild": false,
+  "language": "cpp",
+  "sdkVersion": "20220726.10.00.00",
+  "cpp": {
+    "includePath": [
+      "include"
+    ]
+  },
+  "isVexFileUpToDate": true,
+  "isExpertMode": false,
+  "isCompetitionMode": true,
+  "project": {
+    "name": "Claw",
+    "description": "VEX V5 Robot with Diagonal Movement Support",
+    "slot": 1,
+    "icon": "USER921x.bmp",
+    "version": "1.0.0"
+  }
+}

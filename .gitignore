@@ -1,0 +1,25 @@
+# VEX Build files
+build/
+bin/
+*.bin
+*.elf
+*.a
+*.o
+
+# VEX IDE files
+.vscode/
+*.code-workspace
+
+# Compiled files
+*.d
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*~
+*.swp
+*.swo
+tmp/
+temp/
