@@ -8,23 +8,23 @@ Diagonal movement allows your VEX robot to move in any direction smoothly, not j
 
 ```
          Forward (100%)
-              ↑
+              ^
               |
               |
-    ↖ ︎       |       ↗
-       ╲      |      ╱
-         ╲    |    ╱
-           ╲  |  ╱
-             ╲|╱
-Left ←--------+--------→ Right
-Turn          ╱|╲       Turn
-(-100%)     ╱  |  ╲      (100%)
-          ╱    |    ╲
-        ╱      |      ╲
-      ↙        |        ↘
+    NW        |       NE
+       \      |      /
+         \    |    /
+           \  |  /
+             \|/
+Left <--------+--------> Right
+Turn          /|\       Turn
+(-100%)     /  |  \      (100%)
+          /    |    \
+        /      |      \
+      SW        |        SE
               |
               |
-              ↓
+              v
          Backward (-100%)
 ```
 
@@ -39,9 +39,9 @@ Controller Layout:
 │                                 │
 │    Left Stick    Right Stick    │
 │       (Y)           (X)         │
-│        ↑             ←→         │
-│       ←+→                       │
-│        ↓                        │
+│        ^             <>         │
+│       <+>                       │
+│        v                        │
 │                                 │
 │  Y = Forward/Back               │
 │  X = Turn Left/Right            │
@@ -53,7 +53,7 @@ Controller Layout:
 #### 1. Forward Only
 ```
 Left Y: 100%    Right X: 0%
-Result: ↑ Straight forward
+Result: Straight forward
 
 Left Motor:  100%  (100 + 0)
 Right Motor: 100%  (100 - 0)
@@ -62,30 +62,30 @@ Right Motor: 100%  (100 - 0)
 #### 2. Turn Right Only
 ```
 Left Y: 0%      Right X: 50%
-Result: ↻ Rotate clockwise
+Result: Rotate clockwise
 
 Left Motor:  50%   (0 + 50)
 Right Motor: -50%  (0 - 50)
 ```
 
-#### 3. Forward-Right Diagonal ⭐
+#### 3. Forward-Right Diagonal
 ```
 Left Y: 80%     Right X: 40%
-Result: ↗ Smooth diagonal arc
+Result: Smooth diagonal arc (forward-right)
 
-Left Motor:  120% → 100% (clamped)  (80 + 40)
+Left Motor:  120% > 100% (clamped)  (80 + 40)
 Right Motor:  40%                   (80 - 40)
 
 The robot curves forward-right smoothly!
 ```
 
-#### 4. Forward-Left Diagonal ⭐
+#### 4. Forward-Left Diagonal
 ```
 Left Y: 80%     Right X: -40%
-Result: ↖ Smooth diagonal arc
+Result: Smooth diagonal arc (forward-left)
 
 Left Motor:   40%                   (80 - 40)
-Right Motor: 120% → 100% (clamped)  (80 + 40)
+Right Motor: 120% > 100% (clamped)  (80 + 40)
 
 The robot curves forward-left smoothly!
 ```
@@ -105,8 +105,8 @@ Right Motor Speed = Forward - Turn
 - Turn input: 20%
 
 ```
-Left Motor  = 60 + 20 = 80%  ← Faster
-Right Motor = 60 - 20 = 40%  ← Slower
+Left Motor  = 60 + 20 = 80%  (Faster)
+Right Motor = 60 - 20 = 40%  (Slower)
 ```
 
 Result: Robot moves forward while gradually turning right (smooth arc)
@@ -116,8 +116,8 @@ Result: Robot moves forward while gradually turning right (smooth arc)
 - Turn input: 60%
 
 ```
-Left Motor  = 50 + 60 = 110% → 100% (clamped)  ← Full speed
-Right Motor = 50 - 60 = -10%                   ← Slight reverse
+Left Motor  = 50 + 60 = 110% > 100% (clamped)  (Full speed)
+Right Motor = 50 - 60 = -10%                   (Slight reverse)
 ```
 
 Result: Robot makes a sharp right turn while moving forward
@@ -127,8 +127,8 @@ Result: Robot makes a sharp right turn while moving forward
 - Turn input: -30%
 
 ```
-Left Motor  = -70 + (-30) = -100%  ← Full reverse
-Right Motor = -70 - (-30) = -40%   ← Slower reverse
+Left Motor  = -70 + (-30) = -100%  (Full reverse)
+Right Motor = -70 - (-30) = -40%   (Slower reverse)
 ```
 
 Result: Robot moves backward while turning left
@@ -138,15 +138,15 @@ Result: Robot moves backward while turning left
 ### WITHOUT Diagonal Movement (Old Method)
 ```
 Step 1: Move forward
-   ↑
-   ↑
+   ^
+   ^
    
 Step 2: Stop, then turn right
-      →
+      >
       
 Step 3: Move forward again
-         ↑
-         ↑
+         ^
+         ^
 
 Result: Robot "stutters" - inefficient and slow
 ```
@@ -154,10 +154,10 @@ Result: Robot "stutters" - inefficient and slow
 ### WITH Diagonal Movement (New Method)
 ```
 Single smooth motion:
-   ↑
-    ↗
-      ↗
-        →
+   ^
+    NE
+      NE
+        >
 
 Result: Smooth arc - faster and more efficient
 ```
@@ -168,21 +168,21 @@ For robots with mecanum wheels or X-drive:
 
 ```
          Strafe Left
-              ←
+              <
               |
-    ↖ ︎       |       ↗
-       ╲      |      ╱
-         ╲    |    ╱  Forward
-           ╲  |  ╱     ↑
-             ╲|╱
-Turn  ↺-------+-------↻  Turn
-              ╱|╲
-            ╱  |  ╲
-          ╱    |    ╲
-        ╱      |      ╲
-      ↙        |        ↘
+    NW        |       NE
+       \      |      /
+         \    |    /  Forward
+           \  |  /     ^
+             \|/
+Turn  CCW-----+-----CW  Turn
+              /|\
+            /  |  \
+          /    |    \
+        /      |      \
+      SW        |        SE
               |
-              →
+              >
          Strafe Right
 ```
 
@@ -197,24 +197,24 @@ With field-centric drive, you can:
 
 #### Scenario 1: Approaching a Goal at an Angle
 ```
-Start:  [Robot] ───→  ↗  [Goal]
+Start:  [Robot] ---> (diagonal) [Goal]
 
 Without diagonal: 
-  Forward → Stop → Turn → Forward
+  Forward > Stop > Turn > Forward
   Time: ~3 seconds
 
 With diagonal:
   Forward + Turn (simultaneous)
   Time: ~1.5 seconds
   
-⏱️ Time saved: 50%!
+Time saved: 50%!
 ```
 
 #### Scenario 2: Navigating Around Obstacles
 ```
         [Obstacle]
-           ⬛
-    ↗  ←─  ↖
+           ###
+    NE  <--  NW
    /         \
 [Start]    [Goal]
 
@@ -227,8 +227,8 @@ instead of multiple straight segments
 Your Robot: [R]    Opponent: [O]
 
 Quick diagonal retreat:
-    [R]  →  ↘   (Moving back and to side simultaneously)
-[O] ↑         [R]
+    [R]  ->  SE   (Moving back and to side simultaneously)
+[O] ^         [R]
 
 Faster repositioning than back-then-turn
 ```
@@ -258,9 +258,9 @@ Try these exercises on your practice field:
 ```
 Start: [R]
 
-  ┌─→─→─╮
-  ↑     ↓
-  ╰─←─←─┘
+  .---->.
+  ^     v
+  '<----'
   
 Use diagonal movement at corners instead of stopping to turn
 ```
@@ -269,8 +269,8 @@ Use diagonal movement at corners instead of stopping to turn
 ```
 Start: [R]
 
-  ↗─╮  ╭─↖─╮  ╭─↗
-     ↓  ↓   ↓  ↓
+  NE-.  .-NW-.  .-NE
+     v  v   v  v
   Cone  Cone  Cone
   
 Weave through cones using alternating diagonal movements
@@ -278,13 +278,13 @@ Weave through cones using alternating diagonal movements
 
 ### Exercise 3: Circle a Point
 ```
-         ↑
-      ↖  |  ↗
-    ←----⊕----→
-      ↙  |  ↘
-         ↓
+         ^
+      NW  |  NE
+    <----[+]---->
+      SW  |  SE
+         v
          
-Keep robot facing center [⊕] while moving in a circle
+Keep robot facing center [X] while moving in a circle
 (Requires field-centric drive or advanced arcade control)
 ```
 
@@ -309,7 +309,7 @@ Practice: Trace circles with your thumb on the stick
 
 ### Mistake 3: Not Using Diagonal When Beneficial
 ```
-Problem: Still driving like old method (forward → turn → forward)
+Problem: Still driving like old method (forward > turn > forward)
 
 Solution: Think in terms of curves, not corners
 Ask: "Can I combine these movements?"
@@ -322,7 +322,7 @@ Ask: "Can I combine these movements?"
 **Key Takeaway**: 
 ```
 Different motor speeds = Diagonal movement
-Left Motor ≠ Right Motor = Curved path ✓
+Left Motor != Right Motor = Curved path
 Left Motor = Right Motor = Straight path
 ```
 

@@ -1,27 +1,27 @@
 # Quick Reference Card - Diagonal Movement
 
-## 🎮 Controller Layout (Arcade Drive)
+## Controller Layout (Arcade Drive)
 
 ```
 ┌─────────────────────────────────┐
 │     VEX V5 Controller           │
 │                                 │
 │   Left Stick      Right Stick   │
-│       ↑                ←→       │
-│      ←+→                        │
-│       ↓                         │
+│       ^                <>       │
+│      <+>                        │
+│       v                         │
 │                                 │
 │   Forward/Back     Turn L/R     │
 └─────────────────────────────────┘
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Step 1: Wire Your Robot
-- Left Front Motor → PORT1
-- Left Back Motor → PORT2
-- Right Front Motor → PORT3
-- Right Back Motor → PORT4
+- Left Front Motor to PORT1
+- Left Back Motor to PORT2
+- Right Front Motor to PORT3
+- Right Back Motor to PORT4
 
 ### Step 2: Download Program
 - Open in VEXcode V5
@@ -33,23 +33,23 @@
 - **Turn only**: Right stick left/right
 - **Diagonal**: Use BOTH sticks together!
 
-## 📐 The Magic Formula
+## The Magic Formula
 
 ```
 Left Motor  = Forward + Turn
 Right Motor = Forward - Turn
 ```
 
-## 🎯 Common Movements
+## Common Movements
 
 | Movement | Left Stick | Right Stick | Result |
 |----------|-----------|-------------|---------|
-| Straight | 100% ↑ | 0% | → Straight forward |
-| Rotate | 0% | 50% → | ↻ Spin right |
-| **Diagonal ↗** | **80% ↑** | **40% →** | **Curve forward-right** |
-| **Diagonal ↖** | **80% ↑** | **40% ←** | **Curve forward-left** |
+| Straight | 100% ^ | 0% | Straight forward |
+| Rotate | 0% | 50% > | Spin right |
+| **Diagonal (forward-right)** | **80% ^** | **40% >** | **Curve forward-right** |
+| **Diagonal (forward-left)** | **80% ^** | **40% <** | **Curve forward-left** |
 
-## ⚙️ Configuration
+## Configuration
 
 Edit `src/robot-config.cpp`:
 
@@ -59,7 +59,7 @@ const double DRIVE_DEADZONE = 5.0;     // 0-20
 const double DRIVE_SENSITIVITY = 1.0;  // 0.1-2.0
 ```
 
-## 🏁 Competition Tips
+## Competition Tips
 
 ### Offense
 ```cpp
@@ -79,9 +79,9 @@ arcadeDrive(-70, 60);
 arcadeDrive(50, 25);
 ```
 
-## 🔧 Switch Drive Modes
+## Switch Drive Modes
 
-Edit `src/main.cpp` → `usercontrol()`:
+Edit `src/main.cpp` > `usercontrol()`:
 
 **Arcade Drive** (Default)
 ```cpp
@@ -114,7 +114,7 @@ fieldCentricDrive(forward, strafe, turn);
 - **VISUAL_GUIDE.md** - Diagrams & math
 - **CONFIGURATION.md** - Hardware setups
 
-## 💡 Pro Tips
+## Pro Tips
 
 1. **Practice smooth inputs** - Don't jerk the sticks
 2. **Anticipate turns** - Start turning before you think you need to
@@ -123,4 +123,4 @@ fieldCentricDrive(forward, strafe, turn);
 
 ---
 
-**Made with ❤️ for VEX Robotics Teams**
+**Made for VEX Robotics Teams**

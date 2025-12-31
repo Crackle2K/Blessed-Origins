@@ -4,11 +4,11 @@ A VEX V5 robot control system featuring smooth diagonal movement capabilities fo
 
 ## Features
 
-### 🎮 Advanced Drive Control Systems
+### Advanced Drive Control Systems
 
 This project implements three different drive control methods to enable smooth diagonal movement:
 
-#### 1. **Arcade Drive** (Recommended) ⭐
+#### 1. **Arcade Drive** (Recommended)
 - **Left Stick Y-axis**: Forward/Backward movement
 - **Right Stick X-axis**: Left/Right turning
 - **Diagonal Movement**: Automatically achieved by using both sticks simultaneously

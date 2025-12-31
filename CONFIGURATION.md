@@ -14,11 +14,11 @@ Choose your robot type:
 
 ---
 
-## 1. Standard 4-Motor Tank Drive ✓ (Default)
+## 1. Standard 4-Motor Tank Drive (Default)
 
 **What it is**: Two motors on each side, standard wheels
 
-**Current configuration**: ✓ Already set up!
+**Current configuration**: Already set up!
 
 ```cpp
 // src/robot-config.cpp
@@ -37,7 +37,7 @@ double turn = Controller1.Axis1.position(percent);
 arcadeDrive(forward, turn);
 ```
 
-**Diagonal Movement**: ✓ Works perfectly with arcade drive
+**Diagonal Movement**: Works perfectly with arcade drive
 
 ---
 
@@ -110,7 +110,7 @@ void arcadeDrive(double forward, double turn) {
 }
 ```
 
-**Diagonal Movement**: ✓ Works the same as 4-motor
+**Diagonal Movement**: Works the same as 4-motor
 
 ---
 
@@ -151,7 +151,7 @@ void usercontrol(void) {
 }
 ```
 
-**Diagonal Movement**: ✓✓ Best diagonal movement capability!
+**Diagonal Movement**: Best diagonal movement capability!
 
 ### Mecanum Control Tips
 - Forward + Strafe = True diagonal (no rotation)
@@ -218,7 +218,7 @@ void xDrive(double forward, double strafe, double turn) {
 
 **Step 3**: Use in main.cpp (same as mecanum)
 
-**Diagonal Movement**: ✓✓ Excellent, faster than mecanum
+**Diagonal Movement**: Excellent, faster than mecanum
 
 ---
 
@@ -282,7 +282,7 @@ double turn = Controller1.Axis1.position(percent);
 hDrive(forward, strafe, turn);
 ```
 
-**Diagonal Movement**: ✓ Good, combines tank curves with strafing
+**Diagonal Movement**: Good, combines tank curves with strafing
 
 ---
 
@@ -308,10 +308,10 @@ PORT3 - LB        PORT6 - RB
 **Mecanum/X-Drive**:
 ```
 FRONT:
-PORT1 - LF ╱   ╲ RF - PORT3
+PORT1 - LF /   \ RF - PORT3
 
 BACK:
-PORT2 - LB ╲   ╱ RB - PORT4
+PORT2 - LB \   / RB - PORT4
 ```
 
 ---
@@ -329,7 +329,7 @@ Choose gear ratio based on your needs:
 Update in robot-config.cpp:
 ```cpp
 motor LeftFront = motor(PORT1, ratio18_1, false);  // Change ratio here
-//                            ↑
+//                            ^^^
 //                   ratio36_1, ratio18_1, or ratio6_1
 ```
 
@@ -357,8 +357,8 @@ motor RightBack = motor(PORT4, ratio18_1, false);
 **Solution**: Check wheel orientation - rollers should form X pattern
 ```
 Top view:
-  ╱ ╲    Correct X pattern
-  ╲ ╱
+  / \    Correct X pattern
+  \ /
 ```
 
 ### Problem: Diagonal movement too sensitive
@@ -410,10 +410,10 @@ If any test fails, check your motor directions and ports!
 
 | Drive Type | Motors | Diagonal? | Strafe? | Complexity |
 |------------|--------|-----------|---------|------------|
-| 4-Motor Tank | 4 | ✓ Good | ✗ | Low |
-| 6-Motor Tank | 6 | ✓ Good | ✗ | Low |
-| Mecanum | 4 | ✓✓ Best | ✓ | Medium |
-| X-Drive | 4 | ✓✓ Best | ✓ | Medium |
-| H-Drive | 5-6 | ✓ Good | ✓ | Medium |
+| 4-Motor Tank | 4 | Good | No | Low |
+| 6-Motor Tank | 6 | Good | No | Low |
+| Mecanum | 4 | Best | Yes | Medium |
+| X-Drive | 4 | Best | Yes | Medium |
+| H-Drive | 5-6 | Good | Yes | Medium |
 
 **Recommendation**: Start with standard 4-motor tank drive and arcade control. It provides excellent diagonal movement with the simplest configuration!
