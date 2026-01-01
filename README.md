@@ -1,4 +1,4 @@
-# Claw - VEX Robot with Diagonal Movement
+# Claw - Simple Double Movement Control System
 
 A VEX V5 robot control system featuring smooth diagonal movement capabilities for enhanced maneuverability and control.
 
