@@ -14,10 +14,6 @@ motor LeftBack = motor(PORT2, ratio18_1, false);
 motor RightFront = motor(PORT3, ratio18_1, true);
 motor RightBack = motor(PORT4, ratio18_1, true);
 
-// Drive Configuration
-const double DRIVE_DEADZONE = 5.0;      // Controller deadzone percentage
-const double DRIVE_SENSITIVITY = 1.0;   // Drive sensitivity multiplier
-
 /**
  * Configure robot hardware and settings
  */

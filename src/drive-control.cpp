@@ -1,15 +1,45 @@
 #include "vex.h"
-#include "robot-config.h"
 #include "drive-control.h"
 #include <cmath>
 
 using namespace vex;
 
+// ========================================
+// ClawDrive Class Implementation
+// ========================================
+
+ClawDrive::ClawDrive(motor& leftFront, motor& leftBack, motor& rightFront, motor& rightBack,
+                     double deadzone, double sensitivity)
+  : m_leftFront(leftFront),
+    m_leftBack(leftBack),
+    m_rightFront(rightFront),
+    m_rightBack(rightBack),
+    m_deadzone(deadzone),
+    m_sensitivity(sensitivity) {
+  // Constructor - motors are now initialized
+}
+
+void ClawDrive::setDeadzone(double deadzone) {
+  m_deadzone = deadzone;
+}
+
+void ClawDrive::setSensitivity(double sensitivity) {
+  m_sensitivity = sensitivity;
+}
+
+double ClawDrive::getDeadzone() const {
+  return m_deadzone;
+}
+
+double ClawDrive::getSensitivity() const {
+  return m_sensitivity;
+}
+
 /**
  * Apply deadzone to controller input
  */
-double applyDeadzone(double value, double deadzone) {
-  if (fabs(value) < deadzone) {
+double ClawDrive::applyDeadzone(double value) const {
+  if (fabs(value) < m_deadzone) {
     return 0.0;
   }
   return value;
@@ -18,7 +48,7 @@ double applyDeadzone(double value, double deadzone) {
 /**
  * Clamp value to range
  */
-double clamp(double value, double min, double max) {
+double ClawDrive::clamp(double value, double min, double max) const {
   if (value < min) return min;
   if (value > max) return max;
   return value;
@@ -36,14 +66,14 @@ double clamp(double value, double min, double max) {
  * - Turn only: Robot rotates in place
  * - Forward + Turn: Robot moves forward while turning (smooth arc/diagonal)
  */
-void arcadeDrive(double forward, double turn) {
+void ClawDrive::arcadeDrive(double forward, double turn) {
   // Apply deadzone to prevent controller drift
-  forward = applyDeadzone(forward, DRIVE_DEADZONE);
-  turn = applyDeadzone(turn, DRIVE_DEADZONE);
+  forward = applyDeadzone(forward);
+  turn = applyDeadzone(turn);
   
   // Apply sensitivity
-  forward *= DRIVE_SENSITIVITY;
-  turn *= DRIVE_SENSITIVITY;
+  forward *= m_sensitivity;
+  turn *= m_sensitivity;
   
   // Calculate left and right motor velocities
   // This formula combines forward and turning motion for smooth diagonal movement
@@ -55,10 +85,10 @@ void arcadeDrive(double forward, double turn) {
   rightVelocity = clamp(rightVelocity, -100.0, 100.0);
   
   // Set motor velocities
-  LeftFront.spin(directionType::fwd, leftVelocity, velocityUnits::pct);
-  LeftBack.spin(directionType::fwd, leftVelocity, velocityUnits::pct);
-  RightFront.spin(directionType::fwd, rightVelocity, velocityUnits::pct);
-  RightBack.spin(directionType::fwd, rightVelocity, velocityUnits::pct);
+  m_leftFront.spin(directionType::fwd, leftVelocity, velocityUnits::pct);
+  m_leftBack.spin(directionType::fwd, leftVelocity, velocityUnits::pct);
+  m_rightFront.spin(directionType::fwd, rightVelocity, velocityUnits::pct);
+  m_rightBack.spin(directionType::fwd, rightVelocity, velocityUnits::pct);
 }
 
 /**
@@ -68,24 +98,24 @@ void arcadeDrive(double forward, double turn) {
  * Diagonal movement is achieved by setting different velocities
  * for each side (e.g., left at 50%, right at 75% for diagonal-right).
  */
-void tankDrive(double left, double right) {
+void ClawDrive::tankDrive(double left, double right) {
   // Apply deadzone
-  left = applyDeadzone(left, DRIVE_DEADZONE);
-  right = applyDeadzone(right, DRIVE_DEADZONE);
+  left = applyDeadzone(left);
+  right = applyDeadzone(right);
   
   // Apply sensitivity
-  left *= DRIVE_SENSITIVITY;
-  right *= DRIVE_SENSITIVITY;
+  left *= m_sensitivity;
+  right *= m_sensitivity;
   
   // Clamp velocities
   left = clamp(left, -100.0, 100.0);
   right = clamp(right, -100.0, 100.0);
   
   // Set motor velocities
-  LeftFront.spin(directionType::fwd, left, velocityUnits::pct);
-  LeftBack.spin(directionType::fwd, left, velocityUnits::pct);
-  RightFront.spin(directionType::fwd, right, velocityUnits::pct);
-  RightBack.spin(directionType::fwd, right, velocityUnits::pct);
+  m_leftFront.spin(directionType::fwd, left, velocityUnits::pct);
+  m_leftBack.spin(directionType::fwd, left, velocityUnits::pct);
+  m_rightFront.spin(directionType::fwd, right, velocityUnits::pct);
+  m_rightBack.spin(directionType::fwd, right, velocityUnits::pct);
 }
 
 /**
@@ -102,16 +132,16 @@ void tankDrive(double left, double right) {
  * 
  * Note: For standard tank drive robots, use arcadeDrive instead.
  */
-void fieldCentricDrive(double forward, double strafe, double turn) {
+void ClawDrive::fieldCentricDrive(double forward, double strafe, double turn) {
   // Apply deadzone to all inputs
-  forward = applyDeadzone(forward, DRIVE_DEADZONE);
-  strafe = applyDeadzone(strafe, DRIVE_DEADZONE);
-  turn = applyDeadzone(turn, DRIVE_DEADZONE);
+  forward = applyDeadzone(forward);
+  strafe = applyDeadzone(strafe);
+  turn = applyDeadzone(turn);
   
   // Apply sensitivity
-  forward *= DRIVE_SENSITIVITY;
-  strafe *= DRIVE_SENSITIVITY;
-  turn *= DRIVE_SENSITIVITY;
+  forward *= m_sensitivity;
+  strafe *= m_sensitivity;
+  turn *= m_sensitivity;
   
   // Calculate motor velocities for mecanum/X-drive
   // This formula enables true omnidirectional movement
@@ -134,8 +164,18 @@ void fieldCentricDrive(double forward, double strafe, double turn) {
   }
   
   // Set motor velocities
-  LeftFront.spin(directionType::fwd, leftFrontVelocity, velocityUnits::pct);
-  LeftBack.spin(directionType::fwd, leftBackVelocity, velocityUnits::pct);
-  RightFront.spin(directionType::fwd, rightFrontVelocity, velocityUnits::pct);
-  RightBack.spin(directionType::fwd, rightBackVelocity, velocityUnits::pct);
+  m_leftFront.spin(directionType::fwd, leftFrontVelocity, velocityUnits::pct);
+  m_leftBack.spin(directionType::fwd, leftBackVelocity, velocityUnits::pct);
+  m_rightFront.spin(directionType::fwd, rightFrontVelocity, velocityUnits::pct);
+  m_rightBack.spin(directionType::fwd, rightBackVelocity, velocityUnits::pct);
+}
+
+/**
+ * Stop all drive motors
+ */
+void ClawDrive::stop() {
+  m_leftFront.stop();
+  m_leftBack.stop();
+  m_rightFront.stop();
+  m_rightBack.stop();
 }

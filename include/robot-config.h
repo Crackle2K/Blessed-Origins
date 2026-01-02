@@ -15,10 +15,6 @@ extern motor LeftBack;
 extern motor RightFront;
 extern motor RightBack;
 
-// Drive configuration
-extern const double DRIVE_DEADZONE;
-extern const double DRIVE_SENSITIVITY;
-
 // Function declarations
 void configureRobot();
 

@@ -1,6 +1,6 @@
 # Diagonal Movement Examples
 
-This document provides practical examples of how to use the diagonal movement system in various scenarios.
+This document provides practical examples of how to use the Claw Drive Control Library in various scenarios.
 
 ## Basic Usage Examples
 
@@ -8,22 +8,24 @@ This document provides practical examples of how to use the diagonal movement sy
 
 ```cpp
 void autonomous(void) {
+  // Assuming you have created a ClawDrive instance called 'drive'
+  
   // Move forward-right diagonal for 2 seconds
   // 70% forward, 40% right turn
-  arcadeDrive(70, 40);
+  drive.arcadeDrive(70, 40);
   wait(2, seconds);
   
   // Stop
-  arcadeDrive(0, 0);
+  drive.stop();
   wait(0.5, seconds);
   
   // Move backward-left diagonal for 2 seconds  
   // -60% backward, -30% left turn
-  arcadeDrive(-60, -30);
+  drive.arcadeDrive(-60, -30);
   wait(2, seconds);
   
   // Stop
-  arcadeDrive(0, 0);
+  drive.stop();
 }
 ```
 
@@ -32,18 +34,18 @@ void autonomous(void) {
 ```cpp
 void autonomous(void) {
   // Start moving forward
-  arcadeDrive(80, 0);
+  drive.arcadeDrive(80, 0);
   wait(1, seconds);
   
   // Gradually increase turn while maintaining forward speed
   // Creates a smooth spiral/curve
   for (int turn = 0; turn <= 60; turn += 5) {
-    arcadeDrive(80, turn);
+    drive.arcadeDrive(80, turn);
     wait(0.1, seconds);
   }
   
   // Stop
-  arcadeDrive(0, 0);
+  drive.stop();
 }
 ```
 
@@ -52,23 +54,23 @@ void autonomous(void) {
 ```cpp
 void autonomous(void) {
   // Move forward
-  arcadeDrive(60, 0);
+  drive.arcadeDrive(60, 0);
   wait(1.5, seconds);
   
   // Diagonal turn (rounded corner)
-  arcadeDrive(40, 50);
+  drive.arcadeDrive(40, 50);
   wait(0.8, seconds);
   
   // Forward again
-  arcadeDrive(60, 0);
+  drive.arcadeDrive(60, 0);
   wait(1.5, seconds);
   
   // Another rounded corner
-  arcadeDrive(40, 50);
+  drive.arcadeDrive(40, 50);
   wait(0.8, seconds);
   
   // Continue pattern...
-  arcadeDrive(0, 0);
+  drive.stop();
 }
 ```
 
@@ -78,13 +80,16 @@ void autonomous(void) {
 
 ```cpp
 void usercontrol(void) {
+  // Create ClawDrive instance with your motors
+  ClawDrive drive(LeftFront, LeftBack, RightFront, RightBack);
+  
   while (true) {
     double forward = Controller1.Axis3.position(percent);  // Forward/Back
     double strafe = Controller1.Axis4.position(percent);   // Left/Right
     double turn = Controller1.Axis1.position(percent);     // Rotation
     
     // Robot can move in any direction while rotating independently
-    fieldCentricDrive(forward, strafe, turn);
+    drive.fieldCentricDrive(forward, strafe, turn);
     
     wait(20, msec);
   }
@@ -98,19 +103,19 @@ void approachTarget(void) {
   // Useful for approaching game objects at an angle
   
   // Fast diagonal approach
-  arcadeDrive(90, 30);
+  drive.arcadeDrive(90, 30);
   wait(1.5, seconds);
   
   // Slow down for precision
-  arcadeDrive(40, 15);
+  drive.arcadeDrive(40, 15);
   wait(1, seconds);
   
   // Fine adjustment
-  arcadeDrive(20, 10);
+  drive.arcadeDrive(20, 10);
   wait(0.5, seconds);
   
   // Stop at target
-  arcadeDrive(0, 0);
+  drive.stop();
 }
 ```
 
@@ -118,25 +123,27 @@ void approachTarget(void) {
 
 ```cpp
 void usercontrol(void) {
+  ClawDrive drive(LeftFront, LeftBack, RightFront, RightBack);
   bool slowMode = false;
   
   while (true) {
     // Toggle slow mode with button
     if (Controller1.ButtonA.pressing()) {
       slowMode = !slowMode;
+      
+      if (slowMode) {
+        drive.setSensitivity(0.5);  // 50% speed
+      } else {
+        drive.setSensitivity(1.0);  // 100% speed
+      }
+      
       wait(0.3, seconds); // Debounce
     }
     
     double forward = Controller1.Axis3.position(percent);
     double turn = Controller1.Axis1.position(percent);
     
-    // Apply speed multiplier
-    if (slowMode) {
-      forward *= 0.5;
-      turn *= 0.5;
-    }
-    
-    arcadeDrive(forward, turn);
+    drive.arcadeDrive(forward, turn);
     wait(20, msec);
   }
 }
@@ -148,28 +155,30 @@ void usercontrol(void) {
 
 ```cpp
 void autonomous(void) {
+  // Assuming ClawDrive instance 'drive' exists
+  
   // Start position to first goal (diagonal approach)
-  arcadeDrive(75, 35);
+  drive.arcadeDrive(75, 35);
   wait(2.2, seconds);
   
   // Score at goal
-  arcadeDrive(0, 0);
+  drive.stop();
   scoreGoal(); // Your scoring function
   wait(1, seconds);
   
   // Back up diagonally to next position
-  arcadeDrive(-60, -25);
+  drive.arcadeDrive(-60, -25);
   wait(1.8, seconds);
   
   // Turn to face next target
-  arcadeDrive(0, 70);
+  drive.arcadeDrive(0, 70);
   wait(0.6, seconds);
   
   // Straight to next goal
-  arcadeDrive(80, 0);
+  drive.arcadeDrive(80, 0);
   wait(1.5, seconds);
   
-  arcadeDrive(0, 0);
+  drive.stop();
 }
 ```
 
@@ -177,16 +186,22 @@ void autonomous(void) {
 
 ```cpp
 void usercontrol(void) {
+  ClawDrive drive(LeftFront, LeftBack, RightFront, RightBack);
+  
   while (true) {
     double forward = Controller1.Axis3.position(percent);
     double turn = Controller1.Axis1.position(percent);
     
     // Enhanced turning for defensive maneuvers
     if (Controller1.ButtonR1.pressing()) {
-      turn *= 1.5; // Boost turn rate for quick evasion
+      // Boost sensitivity for quick evasion
+      drive.setSensitivity(1.5);
+      drive.arcadeDrive(forward, turn);
+      drive.setSensitivity(1.0);  // Reset
+    } else {
+      drive.arcadeDrive(forward, turn);
     }
     
-    arcadeDrive(forward, turn);
     wait(20, msec);
   }
 }
@@ -199,29 +214,101 @@ void autonomous(void) {
   // Navigate through cones in a slalom pattern
   
   // Start straight
-  arcadeDrive(70, 0);
+  drive.arcadeDrive(70, 0);
   wait(0.8, seconds);
   
   // Weave right
-  arcadeDrive(60, 40);
+  drive.arcadeDrive(60, 40);
   wait(0.6, seconds);
   
   // Straighten briefly
-  arcadeDrive(70, 0);
+  drive.arcadeDrive(70, 0);
   wait(0.4, seconds);
   
   // Weave left
-  arcadeDrive(60, -40);
+  drive.arcadeDrive(60, -40);
   wait(0.6, seconds);
   
   // Straighten
-  arcadeDrive(70, 0);
+  drive.arcadeDrive(70, 0);
   wait(0.4, seconds);
   
   // Repeat pattern...
   
-  arcadeDrive(0, 0);
+  drive.stop();
 }
+```
+
+## Complete Integration Example
+
+### Example 10: Full Robot with Claw Library
+
+```cpp
+#include "vex.h"
+#include "drive-control.h"
+
+using namespace vex;
+
+// Hardware definitions
+brain Brain;
+controller Controller1;
+
+motor LeftFront = motor(PORT1, ratio18_1, false);
+motor LeftBack = motor(PORT2, ratio18_1, false);
+motor RightFront = motor(PORT3, ratio18_1, true);
+motor RightBack = motor(PORT4, ratio18_1, true);
+
+// Create ClawDrive instance
+ClawDrive drive(LeftFront, LeftBack, RightFront, RightBack);
+
+// Competition object
+competition Competition;
+
+void pre_auton(void) {
+  // Configure motors
+  LeftFront.setStopping(brake);
+  LeftBack.setStopping(brake);
+  RightFront.setStopping(brake);
+  RightBack.setStopping(brake);
+  
+  // Optional: customize Claw settings
+  drive.setDeadzone(5.0);
+  drive.setSensitivity(1.0);
+}
+
+void autonomous(void) {
+  // Diagonal movements in autonomous
+  drive.arcadeDrive(60, 30);
+  wait(2, seconds);
+  
+  drive.arcadeDrive(60, -30);
+  wait(2, seconds);
+  
+  drive.stop();
+}
+
+void usercontrol(void) {
+  while (true) {
+    double forward = Controller1.Axis3.position(percent);
+    double turn = Controller1.Axis1.position(percent);
+    
+    drive.arcadeDrive(forward, turn);
+    
+    wait(20, msec);
+  }
+}
+
+int main() {
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
+  
+  pre_auton();
+  
+  while (true) {
+    wait(100, msec);
+  }
+}
+```
 ```
 
 ## Tips for Each Example

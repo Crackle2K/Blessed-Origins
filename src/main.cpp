@@ -4,6 +4,7 @@
 /*    Author:       Claw                                                      */
 /*    Created:      2025                                                      */
 /*    Description:  VEX V5 Robot Program with Diagonal Movement Support      */
+/*                  Example usage of the Claw Drive Control Library          */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
@@ -15,6 +16,9 @@ using namespace vex;
 
 // Competition object for managing match states
 competition Competition;
+
+// Create ClawDrive instance with our motors
+ClawDrive drive(LeftFront, LeftBack, RightFront, RightBack);
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -40,23 +44,23 @@ void autonomous(void) {
   // Example autonomous routine demonstrating diagonal movement
   
   // Move forward for 1 second
-  arcadeDrive(50, 0);
+  drive.arcadeDrive(50, 0);
   wait(1, seconds);
   
   // Diagonal movement: forward-right for 1 second
-  arcadeDrive(50, 30);
+  drive.arcadeDrive(50, 30);
   wait(1, seconds);
   
   // Turn in place for 0.5 seconds
-  arcadeDrive(0, 50);
+  drive.arcadeDrive(0, 50);
   wait(0.5, seconds);
   
   // Diagonal movement: forward-left for 1 second
-  arcadeDrive(50, -30);
+  drive.arcadeDrive(50, -30);
   wait(1, seconds);
   
   // Stop
-  arcadeDrive(0, 0);
+  drive.stop();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -78,7 +82,7 @@ void usercontrol(void) {
     // When both are active, the robot moves diagonally smoothly
     double forward = Controller1.Axis3.position(percent);
     double turn = Controller1.Axis1.position(percent);
-    arcadeDrive(forward, turn);
+    drive.arcadeDrive(forward, turn);
     
     // Alternative Method 2: Tank Drive
     // Uncomment the following lines to use tank drive instead
@@ -86,7 +90,7 @@ void usercontrol(void) {
     /*
     double leftSide = Controller1.Axis3.position(percent);
     double rightSide = Controller1.Axis2.position(percent);
-    tankDrive(leftSide, rightSide);
+    drive.tankDrive(leftSide, rightSide);
     */
     
     // Alternative Method 3: Field-Centric Drive (for mecanum/X-drive)
@@ -95,7 +99,7 @@ void usercontrol(void) {
     double forward = Controller1.Axis3.position(percent);
     double strafe = Controller1.Axis4.position(percent);
     double turn = Controller1.Axis1.position(percent);
-    fieldCentricDrive(forward, strafe, turn);
+    drive.fieldCentricDrive(forward, strafe, turn);
     */
     
     // Small delay to prevent CPU hogging
